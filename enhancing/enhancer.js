@@ -6,7 +6,7 @@ module.exports = {
 };
 
 function succeed(item) {
-  if(item && item.name && item.durability && item.enhancement) {
+  if(item && item.name && typeof item.durability === 'number' && typeof item.enhancement === 'number') {
     const { enhancement } = item;
 
     if(enhancement < 20 && enhancement > -1) {
@@ -22,7 +22,7 @@ function succeed(item) {
 }
 
 function fail(item) {
-  if(item && item.name && item.durability && item.enhancement) {
+  if(item && item.name && typeof item.durability === 'number' && typeof item.enhancement === 'number') {
     const { enhancement } = item;
 
     if(enhancement > 16 && enhancement < 20) {
@@ -44,7 +44,7 @@ function fail(item) {
 }
 
 function repair(item) {
-  if(item && item.name && item.durability && item.enhancement) {
+  if(item && item.name && typeof item.durability === 'number' && typeof item.enhancement === 'number') {
     const { durability } = item;
 
     if(durability < 100 && durability > -1) {
@@ -60,5 +60,17 @@ function repair(item) {
 }
 
 function get(item) {
-  return { ...item };
+  if(item && item.name && typeof item.durability === 'number' && typeof item.enhancement === 'number') {
+    const { name, enhancement } = item;
+
+    if(enhancement < 21 && enhancement > 0) {
+      return { ...item, name: `${name} [+${enhancement}]` };
+    }else if(enhancement === 0) {
+      return item;
+    }else {
+      return { message: "Nice Hacked Weapon" }
+    }
+  }else {
+    return null;
+  }
 }

@@ -4,12 +4,14 @@ const actualItem = { name: "Sword", durability: 5, enhancement: 5 }
 const hackedObject = { name: "Hacked Weapon", durability: 105, enhancement: 25 };
 const perfectObject = { name: "Perfect", durability: 100, enhancement: 20 };
 const undertunedObject = { name: "Undertuned", durability: -5, enhancement: -5 };
+const zero = { name: "Zero", durability: 0, enhancement: 0 };
 const emptyObject = {};
 const array = [];
 
 describe('enhancer', () => {
     it('should take an object and return the same object with a durability property of 100', () => {
         expect(enhancer.repair(actualItem)).toStrictEqual({ ...actualItem, durability: 100 });
+        expect(enhancer.repair(zero)).toStrictEqual({ ...zero, durability: 100 });
         expect(enhancer.repair(hackedObject)).toStrictEqual({ message: "Nice Hacked Weapon" });
         expect(enhancer.repair(undertunedObject)).toStrictEqual({ message: "Nice Hacked Weapon" });
         expect(enhancer.repair(perfectObject)).toStrictEqual({ message: "Item is at max durability" });
@@ -20,6 +22,7 @@ describe('enhancer', () => {
 
     it('should increase enhancement level by 1 if enhancement level is less than 20', () => {
         expect(enhancer.succeed(actualItem)).toStrictEqual({ ...actualItem, enhancement: actualItem.enhancement + 1 });
+        expect(enhancer.succeed(zero)).toStrictEqual({ ...zero, enhancement: zero.enhancement + 1 });
         expect(enhancer.succeed(hackedObject)).toStrictEqual({ message: "Nice Hacked Weapon" });
         expect(enhancer.succeed(undertunedObject)).toStrictEqual({ message: "Nice Hacked Weapon" });
         expect(enhancer.succeed(perfectObject)).toStrictEqual({ message: "Item is already fully enhanced" });
@@ -35,6 +38,7 @@ describe('enhancer', () => {
         const nineteenObject = { name: "Nineteen", durability: 19, enhancement: 19 };
 
         expect(enhancer.fail(actualItem)).toStrictEqual({ ...actualItem, enhancement: 0 });
+        expect(enhancer.fail(zero)).toStrictEqual({ ...zero, enhancement: 0 });
         expect(enhancer.fail(threeObject)).toStrictEqual({ ...threeObject, enhancement: 0 });
         expect(enhancer.fail(tenObject)).toStrictEqual({ ...tenObject, enhancement: 5 });
         expect(enhancer.fail(fifteenObject)).toStrictEqual({ ...fifteenObject, enhancement: 5 });
@@ -45,5 +49,17 @@ describe('enhancer', () => {
         expect(enhancer.fail(emptyObject)).toBe(null);
         expect(enhancer.fail(array)).toBe(null);
         expect(enhancer.fail()).toBe(null);
+    })
+
+    it('should add a level to the name of the item if the item is enhanced past 0', () => {
+
+        expect(enhancer.get(actualItem)).toStrictEqual({ ...actualItem, name: `${actualItem.name} [+${actualItem.enhancement}]`});
+        expect(enhancer.get(zero)).toStrictEqual(zero);
+        expect(enhancer.get(hackedObject)).toStrictEqual({ message: "Nice Hacked Weapon" });
+        expect(enhancer.get(undertunedObject)).toStrictEqual({ message: "Nice Hacked Weapon" });
+        expect(enhancer.get(perfectObject)).toStrictEqual({ ...perfectObject, name: `${perfectObject.name} [+${perfectObject.enhancement}]`});
+        expect(enhancer.get(emptyObject)).toBe(null);
+        expect(enhancer.get(array)).toBe(null);
+        expect(enhancer.get()).toBe(null);
     })
 })
