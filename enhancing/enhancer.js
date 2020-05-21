@@ -34,7 +34,7 @@ function fail(item) {
     }else if(enhancement > -1 && enhancement < 5) {
       return { ...item, enhancement: 0 };
     }else if(enhancement === 20) {
-      return { message: "Item is already fully enhanced" }
+      return { message: "Why did you try to enhance an item that was already fully enhanced" }
     }else {
       return { message: "Nice Hacked Weapon" }
     }
